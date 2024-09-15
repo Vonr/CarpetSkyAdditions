@@ -10,7 +10,6 @@ import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import net.minecraft.CrashReport;
@@ -65,11 +64,7 @@ public class SkyBlockChunkGenerator extends NoiseBasedChunkGenerator {
 
     @Override
     public CompletableFuture<ChunkAccess> fillFromNoise(
-            Executor executor,
-            Blender blender,
-            RandomState random,
-            StructureManager structureManager,
-            ChunkAccess chunk) {
+            Blender blender, RandomState randomState, StructureManager structureManager, ChunkAccess chunk) {
         return CompletableFuture.completedFuture(chunk);
     }
 
@@ -156,7 +151,7 @@ public class SkyBlockChunkGenerator extends NoiseBasedChunkGenerator {
                                         ((JigsawStructureAccessor) structure).getStartPool();
                                 // Bastion Remnants
                                 if (SkyAdditionsSettings.generateMagmaCubeSpawners
-                                        && startPool.is(new ResourceLocation("bastion/starts"))) {
+                                        && startPool.is(ResourceLocation.withDefaultNamespace("bastion/starts"))) {
                                     level.setCurrentlyGenerating(structureNameSupplier);
                                     structureManager
                                             .startsForStructure(sectionPos, structure)
@@ -171,7 +166,7 @@ public class SkyBlockChunkGenerator extends NoiseBasedChunkGenerator {
                                                                     .getTemplate()
                                                                     .left()
                                                                     .orElseThrow(AssertionError::new);
-                                                            if (pieceId.equals(new ResourceLocation(
+                                                            if (pieceId.equals(ResourceLocation.withDefaultNamespace(
                                                                     "bastion/treasure/bases/lava_basin"))) {
                                                                 new SkyBlockStructures.MagmaCubeSpawner(piece)
                                                                         .generate(
@@ -186,7 +181,8 @@ public class SkyBlockChunkGenerator extends NoiseBasedChunkGenerator {
                                             });
                                     // Ancient Cities
                                 } else if (SkyAdditionsSettings.generateAncientCityPortals
-                                        && startPool.is(new ResourceLocation("ancient_city/city_center"))) {
+                                        && startPool.is(
+                                                ResourceLocation.withDefaultNamespace("ancient_city/city_center"))) {
                                     level.setCurrentlyGenerating(structureNameSupplier);
                                     structureManager
                                             .startsForStructure(sectionPos, structure)
@@ -258,7 +254,9 @@ public class SkyBlockChunkGenerator extends NoiseBasedChunkGenerator {
                     try {
                         // Random End Gateways
                         if (SkyAdditionsSettings.generateRandomEndGateways
-                                && placedFeature.feature().is(new ResourceLocation("end_gateway_return"))) {
+                                && placedFeature
+                                        .feature()
+                                        .is(ResourceLocation.withDefaultNamespace("end_gateway_return"))) {
                             level.setCurrentlyGenerating(placedFeatureNameSupplier);
                             placedFeature.placeWithBiomeCheck(level, this, random, minChunkPos);
                         }

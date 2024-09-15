@@ -1,11 +1,15 @@
 package com.jsorrell.carpetskyadditions.mixin;
 
+import carpet.CarpetServer;
 import com.jsorrell.carpetskyadditions.SkyAdditionsDataComponents;
 import com.jsorrell.carpetskyadditions.helpers.SkyAdditionsEnchantmentHelper;
 import java.util.List;
-import net.minecraft.world.flag.FeatureFlagSet;
+import java.util.stream.Stream;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -25,18 +29,25 @@ public class EnchantmentHelperMixin {
                             target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"),
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private static void forceAllowSwiftSneak(
-            FeatureFlagSet featureFlagSet,
             int modifiedEnchantingLevel,
             ItemStack stack,
-            boolean allowTreasure,
+            Stream<Holder<Enchantment>> possibleEnchantments,
             CallbackInfoReturnable<List<EnchantmentInstance>> cir,
+            List list,
             List<EnchantmentInstance> enchantmentList) {
         if (Boolean.TRUE.equals(stack.get(SkyAdditionsDataComponents.SWIFT_SNEAK_ENCHANTABLE_COMPONENT))) {
-            if (Enchantments.SWIFT_SNEAK.canEnchant(stack) || stack.is(Items.BOOK)) {
+            var enchantmentRegistry =
+                    CarpetServer.minecraft_server.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+            if (enchantmentRegistry
+                            .getHolderOrThrow(Enchantments.SWIFT_SNEAK)
+                            .value()
+                            .canEnchant(stack)
+                    || stack.is(Items.BOOK)) {
                 for (int level = 3; 1 <= level; --level) {
                     if (SkyAdditionsEnchantmentHelper.getSwiftSneakMinCost(level) <= modifiedEnchantingLevel
                             && modifiedEnchantingLevel <= SkyAdditionsEnchantmentHelper.getSwiftSneakMaxCost(level)) {
-                        enchantmentList.add(new EnchantmentInstance(Enchantments.SWIFT_SNEAK, level));
+                        enchantmentList.add(new EnchantmentInstance(
+                                enchantmentRegistry.getHolderOrThrow(Enchantments.SWIFT_SNEAK), level));
                         break;
                     }
                 }

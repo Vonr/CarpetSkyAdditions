@@ -6,13 +6,15 @@ import com.jsorrell.carpetskyadditions.SkyAdditionsDataComponents;
 import com.jsorrell.carpetskyadditions.settings.SkyAdditionsSettings;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.monster.warden.Warden;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.phys.AABB;
@@ -36,9 +38,9 @@ public class EnchantmentMenuMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;selectEnchantment(Lnet/minecraft/world/flag/FeatureFlagSet;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/item/ItemStack;IZ)Ljava/util/List;"))
+                                    "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;selectEnchantment(Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/item/ItemStack;ILjava/util/stream/Stream;)Ljava/util/List;"))
     private List<EnchantmentInstance> addSwiftSneak(
-            FeatureFlagSet featureFlagSet, RandomSource random, ItemStack stack, int level, boolean allowTreasure) {
+            RandomSource random, ItemStack stack, int level, Stream<Holder<Enchantment>> possibleEnchantments) {
         if (SkyAdditionsSettings.renewableSwiftSneak) {
             boolean hasWardenNearby = access.evaluate((world, blockPos) -> {
                         AABB box = new AABB(blockPos).inflate(MAX_WARDEN_DISTANCE_FOR_SWIFT_SNEAK);
@@ -56,6 +58,6 @@ public class EnchantmentMenuMixin {
                 stack.set(SkyAdditionsDataComponents.SWIFT_SNEAK_ENCHANTABLE_COMPONENT, true);
             }
         }
-        return EnchantmentHelper.selectEnchantment(featureFlagSet, random, stack, level, allowTreasure);
+        return EnchantmentHelper.selectEnchantment(random, stack, level, possibleEnchantments);
     }
 }

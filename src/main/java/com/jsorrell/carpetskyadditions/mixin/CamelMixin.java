@@ -12,7 +12,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.camel.CamelAi;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -43,8 +42,8 @@ public abstract class CamelMixin extends AbstractHorse implements CamelInterface
     }
 
     @Override
-    public boolean canBeLeashed(Player player) {
-        boolean normallyCanBeLeashed = super.canBeLeashed(player);
+    public boolean canBeLeashed() {
+        boolean normallyCanBeLeashed = super.canBeLeashed();
         boolean canBeLeashed = normallyCanBeLeashed && !isTraderCamel();
         if (normallyCanBeLeashed && !canBeLeashed) {
             // TODO improve this

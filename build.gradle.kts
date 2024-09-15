@@ -1,6 +1,8 @@
 import com.diffplug.gradle.spotless.YamlExtension.JacksonYamlGradleConfig
 
-class Versions(properties: ExtraPropertiesExtension) {
+class Versions(
+  properties: ExtraPropertiesExtension,
+) {
   val mod = properties["mod_version"] as String
   val java: JavaVersion = JavaVersion.toVersion(properties["java_version"] as String)
   val minecraft = properties["minecraft_version"] as String
@@ -217,7 +219,13 @@ modrinth {
   loaders.add("quilt")
   changelog.set(
     provider {
-      project.changelog.renderItem(project.changelog.get(versions.mod).withHeader(false).withEmptySections(false).withLinks(false))
+      project.changelog.renderItem(
+        project.changelog
+          .get(versions.mod)
+          .withHeader(false)
+          .withEmptySections(false)
+          .withLinks(false),
+      )
     },
   )
   dependencies {

@@ -14,6 +14,7 @@ import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.horse.TraderLlama;
 import net.minecraft.world.entity.npc.WanderingTrader;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.ServerLevelData;
@@ -46,7 +47,7 @@ public class TraderSpawnerHelper {
                         }
                         wanderingTrader.setDespawnDelay(48000);
 
-                        traderCamel.equipSaddle(null);
+                        traderCamel.equipSaddle(ItemStack.EMPTY, null);
                         wanderingTrader.moveTo(
                                 traderCamel.getX(),
                                 traderCamel.getY(),
