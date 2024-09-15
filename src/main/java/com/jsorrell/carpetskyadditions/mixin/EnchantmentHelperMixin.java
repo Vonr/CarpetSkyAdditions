@@ -33,8 +33,7 @@ public class EnchantmentHelperMixin {
             ItemStack stack,
             Stream<Holder<Enchantment>> possibleEnchantments,
             CallbackInfoReturnable<List<EnchantmentInstance>> cir,
-            List list,
-            List<EnchantmentInstance> enchantmentList) {
+            List<EnchantmentInstance> list) {
         if (Boolean.TRUE.equals(stack.get(SkyAdditionsDataComponents.SWIFT_SNEAK_ENCHANTABLE_COMPONENT))) {
             var enchantmentRegistry =
                     CarpetServer.minecraft_server.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
@@ -46,7 +45,7 @@ public class EnchantmentHelperMixin {
                 for (int level = 3; 1 <= level; --level) {
                     if (SkyAdditionsEnchantmentHelper.getSwiftSneakMinCost(level) <= modifiedEnchantingLevel
                             && modifiedEnchantingLevel <= SkyAdditionsEnchantmentHelper.getSwiftSneakMaxCost(level)) {
-                        enchantmentList.add(new EnchantmentInstance(
+                        list.add(new EnchantmentInstance(
                                 enchantmentRegistry.getHolderOrThrow(Enchantments.SWIFT_SNEAK), level));
                         break;
                     }
